@@ -375,7 +375,7 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
                 self.abortSessionLoadingButton.setEnabled(True)
                 return True
             try:
-                with open(str(path), 'r') as stream:
+                with open(str(path), 'r',encoding='utf-8') as stream:
                     for rowData in csv.reader(stream):
                         row = table.rowCount()
                         table.insertRow(row)
