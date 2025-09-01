@@ -1,5 +1,5 @@
 # canDrive @ 2020
-# To create a one-file executable, call: pyinstaller -F main.spec
+# 生成单文件可执行程序：pyinstaller -F main.spec
 #----------------------------------------------------------------
 import serial
 import canSniffer_ui
@@ -22,13 +22,15 @@ import SerialReader
 import SerialWriter
 import FileLoader
 
-QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True) #enable highdpi scaling
-QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True) #use highdpi icons
+# 启用高DPI缩放和高DPI图标
+QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
+QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
 
 class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
     def __init__(self):
         super(canSnifferGUI, self).__init__()
         self.setupUi(self)
+        # 连接各个按钮和控件的信号与槽
         self.portScanButton.clicked.connect(self.scanPorts)
         self.portConnectButton.clicked.connect(self.serialPortConnect)
         self.portDisconnectButton.clicked.connect(self.serialPortDisconnect)
@@ -41,7 +43,7 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
         self.hideIdsLineEdit.textChanged.connect(self.hideIdsTextChanged)
         self.clearLabelDictButton.clicked.connect(self.clearLabelDict)
         self.serialController = serial.Serial()
-        self.mainMessageTableWidget.cellClicked.connect(self.cellWasClicked)
+        self.can2MessageTableWidget.cellClicked.connect(self.cellWasClicked)
         self.newTxTableRow.clicked.connect(self.newTxTableRowCallback)
         self.removeTxTableRow.clicked.connect(self.removeTxTableRowCallback)
         self.sendTxTableButton.clicked.connect(self.sendTxTableCallback)
@@ -57,6 +59,7 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
         self.hideAllPacketsButton.clicked.connect(self.hideAllPackets)
         self.showControlsButton.hide()
 
+        # 初始化串口读写和文件加载线程
         self.serialWriterThread = SerialWriter.SerialWriterThread(self.serialController)
         self.serialReaderThread = SerialReader.SerialReaderThread(self.serialController)
         self.serialReaderThread.receivedPacketSignal.connect(self.serialPacketReceiverCallback)
@@ -66,13 +69,14 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
         self.hideOldPacketsThread = HideOldPackets.HideOldPacketsThread()
         self.hideOldPacketsThread.hideOldPacketsSignal.connect(self.hideOldPacketsCallback)
 
+        # 控件初始状态设置
         self.stopPlayBackButton.setVisible(False)
         self.playBackProgressBar.setVisible(False)
         self.sendingGroupBox.hide()
         self.hideOldPacketsThread.enable(5)
         self.hideOldPacketsThread.start()
 
-        # If the timestamp of the exported decoded list is in millisec, it's compatible with SavvyCan's GVRET format.
+        # 导出解码列表时间戳格式设置
         self.exportDecodedListInMillisecTimestamp = False
 
         self.scanPorts()
@@ -87,18 +91,21 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
         self.isInited = False
         self.init()
 
+        # 创建保存文件夹
         if not os.path.exists("save"):
             os.makedirs("save")
 
-        for i in range(5, self.mainMessageTableWidget.columnCount()):
-            self.mainMessageTableWidget.setColumnWidth(i, 32)
-        for i in range(5, self.mainMessageTableWidget.columnCount()):
+        # 设置表格列宽
+        for i in range(5, self.can2MessageTableWidget.columnCount()):
+            self.can2MessageTableWidget.setColumnWidth(i, 32)
+        for i in range(5, self.can2MessageTableWidget.columnCount()):
             self.decodedMessagesTableWidget.setColumnWidth(i, 32)
         self.decodedMessagesTableWidget.setColumnWidth(1, 150)
         self.decodedMessagesTableWidget.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
         self.txTable.horizontalHeader().setSectionResizeMode(3, QHeaderView.Stretch)
         self.showFullScreen()
 
+    # 停止回放
     def stopPlayBackCallback(self):
         try:
             self.serialWriterThread.packetSentSignal.disconnect()
@@ -109,6 +116,7 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
         self.stopPlayBackButton.setVisible(False)
         self.playBackProgressBar.setVisible(False)
 
+    # 设置单选按钮状态
     def setRadioButton(self, radioButton:QRadioButton, mode):
         radioButton.setAutoExclusive(False)
         if mode == 0:
@@ -120,28 +128,29 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
         radioButton.setAutoExclusive(True)
         QApplication.processEvents()
 
+    # 回放一条主表数据
     def playbackMainTable1Packet(self):
         row = self.playbackMainTableIndex
 
         if row < 0:
             self.stopPlayBackCallback()
             return
-        maxRows = self.mainMessageTableWidget.rowCount()
+        maxRows = self.can2MessageTableWidget.rowCount()
         txBuf = ""
-        id = ((self.mainMessageTableWidget.item(row, 1).text()).split(" "))[0]
+        id = ((self.can2MessageTableWidget.item(row, 1).text()).split(" "))[0]
         if len(id) % 2:
             txBuf += '0'
-        txBuf += id + ',' + self.mainMessageTableWidget.item(row, 2).text() + ',' + \
-                 self.mainMessageTableWidget.item(row, 3).text() + ','
-        for i in range(5, self.mainMessageTableWidget.columnCount()):
-            txBuf += self.mainMessageTableWidget.item(row, i).text()
+        txBuf += id + ',' + self.can2MessageTableWidget.item(row, 2).text() + ',' + \
+                 self.can2MessageTableWidget.item(row, 3).text() + ','
+        for i in range(5, self.can2MessageTableWidget.columnCount()):
+            txBuf += self.can2MessageTableWidget.item(row, i).text()
         txBuf += '\n'
         if row < maxRows - 1:
-            dt = float(self.mainMessageTableWidget.item(row, 0).text()) - float(
-                self.mainMessageTableWidget.item(row + 1, 0).text())
+            dt = float(self.can2MessageTableWidget.item(row, 0).text()) - float(
+                self.can2MessageTableWidget.item(row + 1, 0).text())
             sec_to_ms = 1000
-            if '.' not in self.mainMessageTableWidget.item(row, 0).text():
-                sec_to_ms = 1       # timestamp already in ms
+            if '.' not in self.can2MessageTableWidget.item(row, 0).text():
+                sec_to_ms = 1       # 时间戳已为毫秒
             dt = abs(int(dt * sec_to_ms))
             self.serialWriterThread.setNormalWriteDelay(dt)
         self.playBackProgressBar.setValue(int((maxRows - row) / maxRows * 100))
@@ -149,20 +158,23 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
 
         self.serialWriterThread.write(txBuf)
 
+    # 开始回放主表
     def playbackMainTableCallback(self):
         self.playbackMainTableButton.setVisible(False)
         self.stopPlayBackButton.setVisible(True)
         self.playBackProgressBar.setVisible(True)
-        self.playbackMainTableIndex = self.mainMessageTableWidget.rowCount() - 1
+        self.playbackMainTableIndex = self.can2MessageTableWidget.rowCount() - 1
         self.serialWriterThread.setRepeatedWriteDelay(0)
         print('playing back...')
         self.serialWriterThread.packetSentSignal.connect(self.playbackMainTable1Packet)
         self.playbackMainTable1Packet()
 
+    # 清空主表
     def clearTableCallback(self):
         self.idDict.clear()
-        self.mainMessageTableWidget.setRowCount(0)
+        self.can2MessageTableWidget.setRowCount(0)
 
+    # 发送解码包
     def sendDecodedPacketCallback(self):
         self.newTxTableRowCallback()
         newRow = 0
@@ -180,26 +192,31 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
         if self.sendTxTableButton.isEnabled():
             self.sendTxTableCallback()
 
+    # 解码表内容变更回调
     def decodedTableItemChangedCallback(self):
         if self.isInited:
             self.saveTableToFile(self.decodedMessagesTableWidget, "save/decodedPackets.csv")
 
+    # 删除解码行
     def deleteDecodedLineCallback(self):
         self.decodedMessagesTableWidget.removeRow(self.decodedMessagesTableWidget.currentRow())
 
+    # 添加到解码表
     def addToDecodedCallback(self):
         newRow = self.decodedMessagesTableWidget.rowCount()
         self.decodedMessagesTableWidget.insertRow(newRow)
         for i in range(1, self.decodedMessagesTableWidget.columnCount()):
-            new_item = QTableWidgetItem(self.mainMessageTableWidget.item(self.mainMessageTableWidget.currentRow(), i))
+            new_item = QTableWidgetItem(self.can2MessageTableWidget.item(self.can2MessageTableWidget.currentRow(), i))
             self.decodedMessagesTableWidget.setItem(newRow, i, new_item)
 
+    # 显示/隐藏发送表
     def showSendingTableButtonCallback(self):
         if self.showSendingTableCheckBox.isChecked():
             self.sendingGroupBox.show()
         else:
             self.sendingGroupBox.hide()
 
+    # 隐藏所有包
     def hideAllPackets(self):
         text = ""
         for id in self.idDict:
@@ -207,20 +224,20 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
         self.hideIdsLineEdit.setText(text)
         self.clearTableCallback()
 
+    # 隐藏旧包回调
     def hideOldPacketsCallback(self):
         if not self.hideOldPacketsCheckBox.isChecked():
             return
         if not self.groupModeCheckBox.isChecked():
             return
-        for i in range(self.mainMessageTableWidget.rowCount()):
-            if self.mainMessageTableWidget.isRowHidden(i):
+        for i in range(self.can2MessageTableWidget.rowCount()):
+            if self.can2MessageTableWidget.isRowHidden(i):
                 continue
-            packetTime = float(self.mainMessageTableWidget.item(i, 0).text())
+            packetTime = float(self.can2MessageTableWidget.item(i, 0).text())
             if (time.time() - self.startTime) - packetTime > self.hideOldPeriod.value():
-                # print("Hiding: " + str(self.mainMessageTableWidget.item(i,1).text()))
-                # print(time.time() - self.start_time)
-                self.mainMessageTableWidget.setRowHidden(i, True)
+                self.can2MessageTableWidget.setRowHidden(i, True)
 
+    # 发送发送表数据
     def sendTxTableCallback(self):
         self.setRadioButton(self.txDataRadioButton, 2)
         for row in range(self.txTable.rowCount()):
@@ -238,31 +255,38 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
                     self.serialWriterThread.setRepeatedWriteDelay(0)
                 self.serialWriterThread.write(txBuf)
 
+    # 文件加载完成回调
     def fileLoadingFinishedCallback(self):
         self.abortSessionLoadingButton.setEnabled(False)
 
+    # 中止文件加载回调
     def abortSessionLoadingCallback(self):
         self.fileLoaderThread.stop()
         self.abortSessionLoadingButton.setEnabled(False)
 
+    # 移除发送表行
     def removeTxTableRowCallback(self):
         try:
             self.txTable.removeRow(self.txTable.currentRow())
         except:
             print('cannot remove')
 
+    # 新增发送表行
     def newTxTableRowCallback(self):
         newRow = 0
         self.txTable.insertRow(newRow)
 
+    # 仅显示指定ID回调
     def showOnlyIdsTextChanged(self):
         self.showOnlyIdsSet.clear()
         self.showOnlyIdsSet = set(self.showOnlyIdsLineEdit.text().split(" "))
 
+    # 隐藏指定ID回调
     def hideIdsTextChanged(self):
         self.hideIdsSet.clear()
         self.hideIdsSet = set(self.hideIdsLineEdit.text().split(" "))
 
+    # 初始化，加载解码表和ID标签字典
     def init(self):
         self.loadTableFromFile(self.decodedMessagesTableWidget, "save/decodedPackets.csv")
         self.loadTableFromFile(self.idLabelDictTable, "save/labelDict.csv")
@@ -271,10 +295,12 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
                 str(self.idLabelDictTable.item(row, 1).text())
         self.isInited = True
 
+    # 清空ID标签字典
     def clearLabelDict(self):
         self.idLabelDictTable.setRowCount(0)
         self.saveTableToFile(self.idLabelDictTable, "save/labelDict.csv")
 
+    # 保存表格到文件
     def saveTableToFile(self, table, path):
         if path is None:
             path, _ = QFileDialog.getSaveFileName(self, 'Save File', './save', 'CSV(*.csv)')
@@ -297,8 +323,9 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
                             rowData.append('')
                     writer.writerow(rowData)
 
+    # 主表填充回调
     def mainTablePopulatorCallback(self, rowData):
-
+        # 过滤显示和隐藏ID
         if self.showOnlyIdsCheckBox.isChecked():
             if str(rowData[1]) not in self.showOnlyIdsSet:
                 return
@@ -308,23 +335,23 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
 
         newId = str(rowData[1])
 
-        row = 0  # self.mainMessageTableWidget.rowCount()
+        row = 0
         if self.groupModeCheckBox.isChecked():
             if newId in self.idDict.keys():
                 row = self.idDict[newId]
             else:
-                row = self.mainMessageTableWidget.rowCount()
-                self.mainMessageTableWidget.insertRow(row)
+                row = self.can2MessageTableWidget.rowCount()
+                self.can2MessageTableWidget.insertRow(row)
         else:
-            self.mainMessageTableWidget.insertRow(row)
+            self.can2MessageTableWidget.insertRow(row)
 
-        if self.mainMessageTableWidget.isRowHidden(row):
-            self.mainMessageTableWidget.setRowHidden(row, False)
+        if self.can2MessageTableWidget.isRowHidden(row):
+            self.can2MessageTableWidget.setRowHidden(row, False)
 
-        for i in range(self.mainMessageTableWidget.columnCount()):
+        for i in range(self.can2MessageTableWidget.columnCount()):
             if i < len(rowData):
                 data = str(rowData[i])
-                item = self.mainMessageTableWidget.item(row, i)
+                item = self.can2MessageTableWidget.item(row, i)
                 newItem = QTableWidgetItem(data)
                 if item:
                     if item.text() != data:
@@ -339,37 +366,37 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
                         newItem.setBackground(QColor(104, 37, 98))
             else:
                 newItem = QTableWidgetItem()
-            self.mainMessageTableWidget.setItem(row, i, newItem)
+            self.can2MessageTableWidget.setItem(row, i, newItem)
 
         isFamiliar = False
 
         if self.highlightNewIdCheckBox.isChecked():
             if newId not in self.idDict.keys():
                 for j in range(3):
-                    self.mainMessageTableWidget.item(row, j).setBackground(QColor(52, 44, 124))
+                    self.can2MessageTableWidget.item(row, j).setBackground(QColor(52, 44, 124))
 
         self.idDict[newId] = row
 
         if newId in self.idLabelDict.keys():
             value = newId + " (" + self.idLabelDict[newId] + ")"
-            self.mainMessageTableWidget.setItem(row, 1, QTableWidgetItem(value))
+            self.can2MessageTableWidget.setItem(row, 1, QTableWidgetItem(value))
             isFamiliar = True
 
-        for i in range(self.mainMessageTableWidget.columnCount()):
+        for i in range(self.can2MessageTableWidget.columnCount()):
             if (isFamiliar or (newId.find("(") >= 0)) and i < 3:
-                self.mainMessageTableWidget.item(row, i).setBackground(QColor(53, 81, 52))
+                self.can2MessageTableWidget.item(row, i).setBackground(QColor(53, 81, 52))
 
-            self.mainMessageTableWidget.item(row, i).setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
+            self.can2MessageTableWidget.item(row, i).setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
 
         self.receivedPackets = self.receivedPackets + 1
         self.packageCounterLabel.setText(str(self.receivedPackets))
 
-
+    # 从文件加载表格
     def loadTableFromFile(self, table, path):
         if path is None:
             path, _ = QFileDialog.getOpenFileName(self, 'Open File', './save', 'CSV(*.csv)')
         if path != '':
-            if table == self.mainMessageTableWidget:
+            if table == self.can2MessageTableWidget:
                 self.fileLoaderThread.start()
                 self.fileLoaderThread.enable(path, self.playbackDelaySpinBox.value())
                 self.abortSessionLoadingButton.setEnabled(True)
@@ -388,18 +415,22 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
             except OSError:
                 print("file not found: " + path)
 
+    # 从文件加载会话
     def loadSessionFromFile(self):
         if self.autoclearCheckBox.isChecked():
             self.idDict.clear()
-            self.mainMessageTableWidget.setRowCount(0)
-        self.loadTableFromFile(self.mainMessageTableWidget, None)
+            self.can2MessageTableWidget.setRowCount(0)
+        self.loadTableFromFile(self.can2MessageTableWidget, None)
 
+    # 保存会话到文件
     def saveSessionToFile(self):
-        self.saveTableToFile(self.mainMessageTableWidget, None)
+        self.saveTableToFile(self.can2MessageTableWidget, None)
 
+    # 单元格点击回调
     def cellWasClicked(self):
-        self.saveIdToDictLineEdit.setText(self.mainMessageTableWidget.item(self.mainMessageTableWidget.currentRow(), 1).text())
+        self.saveIdToDictLineEdit.setText(self.can2MessageTableWidget.item(self.can2MessageTableWidget.currentRow(), 1).text())
 
+    # 保存ID标签到字典
     def saveIdLabelToDictCallback(self):
         if (not self.saveIdToDictLineEdit.text()) or (not self.saveLabelToDictLineEdit.text()):
             return
@@ -416,10 +447,11 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
         self.saveLabelToDictLineEdit.setText('')
         self.saveTableToFile(self.idLabelDictTable, "save/labelDict.csv")
 
+    # 开始嗅探
     def startSniffing(self):
         if self.autoclearCheckBox.isChecked():
             self.idDict.clear()
-            self.mainMessageTableWidget.setRowCount(0)
+            self.can2MessageTableWidget.setRowCount(0)
         self.startSniffingButton.setEnabled(False)
         self.stopSniffingButton.setEnabled(True)
         self.sendTxTableButton.setEnabled(True)
@@ -433,6 +465,7 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
 
         self.startTime = time.time()
 
+    # 停止嗅探
     def stopSniffing(self):
         self.startSniffingButton.setEnabled(True)
         self.stopSniffingButton.setEnabled(False)
@@ -440,6 +473,7 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
         self.activeChannelComboBox.setEnabled(True)
         self.setRadioButton(self.rxDataRadioButton, 0)
 
+    # 串口数据包接收回调
     def serialPacketReceiverCallback(self, packet, time):
         if self.startSniffingButton.isEnabled():
             return
@@ -450,15 +484,16 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
             self.snifferMsgPlainTextEdit.document().setPlainText(packet)
             return
 
-        rowData = [str(time - self.startTime)[:7]]  # timestamp
+        rowData = [str(time - self.startTime)[:7]]  # 时间戳
         rowData += packetSplit[0:3]  # IDE, RTR, EXT
         DLC = len(packetSplit[3]) // 2
         rowData.append(str("{:02X}".format(DLC)))  # DLC
         if DLC > 0:
-            rowData += [packetSplit[3][i:i + 2] for i in range(0, len(packetSplit[3]), 2)]  # data
+            rowData += [packetSplit[3][i:i + 2] for i in range(0, len(packetSplit[3]), 2)]  # 数据
 
         self.mainTablePopulatorCallback(rowData)
 
+    # 串口连接
     def serialPortConnect(self):
         try:
             self.serialController.port = self.portSelectorComboBox.currentText()
@@ -474,6 +509,7 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
         except serial.SerialException as e:
             print('Error opening port: ' + str(e))
 
+    # 串口断开
     def serialPortDisconnect(self):
         if self.stopSniffingButton.isEnabled():
             self.stopSniffing()
@@ -488,6 +524,7 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
         except serial.SerialException as e:
             print('Error closing port: ' + str(e))
 
+    # 扫描串口
     def scanPorts(self):
         self.portSelectorComboBox.clear()
         comPorts = serial.tools.list_ports.comports()
@@ -496,32 +533,34 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
             self.portSelectorComboBox.addItem(name)
 
 
+# 异常钩子
 def exception_hook(exctype, value, traceback):
     print(exctype, value, traceback)
     sys._excepthook(exctype, value, traceback)
     sys.exit(1)
 
+# 主函数入口
 def main():
-    # excepthook redirect
+    # 重定向异常钩子
     sys._excepthook = sys.excepthook
     sys.excepthook = exception_hook
 
-    # creating app
+    # 创建应用
     app = QApplication(sys.argv)
     gui = canSnifferGUI()
 
-    #applying dark theme
+    # 应用暗色主题
     qtmodern.styles.dark(app)
     darked_gui = qtmodern.windows.ModernWindow(gui)
 
-    # adding a grip to the top left corner to make the frameless window resizable
+    # 添加窗口缩放控件
     layout = QVBoxLayout()
     sizegrip = QSizeGrip(darked_gui)
     sizegrip.setMaximumSize(30, 30)
     layout.addWidget(sizegrip, 50, Qt.AlignBottom | Qt.AlignRight)
     darked_gui.setLayout(layout)
 
-    #starting the app
+    # 启动应用
     darked_gui.show()
     app.exec_()
 
