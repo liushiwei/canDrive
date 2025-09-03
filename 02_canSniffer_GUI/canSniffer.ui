@@ -571,7 +571,7 @@
          </font>
         </property>
         <property name="currentIndex">
-         <number>2</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="tab_4">
          <attribute name="title">
@@ -749,7 +749,7 @@
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>-10</y>
+               <y>0</y>
                <width>305</width>
                <height>462</height>
               </rect>
@@ -1573,14 +1573,14 @@
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>0</y>
+               <y>-10</y>
                <width>305</width>
                <height>462</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_10">
               <item>
-               <widget class="QPushButton" name="clearTableButton">
+               <widget class="QPushButton" name="clearTableButton_can2">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -1636,7 +1636,7 @@
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_13">
                  <item>
-                  <widget class="QCheckBox" name="highlightNewIdCheckBox">
+                  <widget class="QCheckBox" name="highlightNewIdCheckBox_can2">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -1660,7 +1660,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="highlightNewDataCheckBox">
+                  <widget class="QCheckBox" name="highlightNewDataCheckBox_can2">
                    <property name="enabled">
                     <bool>true</bool>
                    </property>
@@ -1695,7 +1695,7 @@
                     <number>0</number>
                    </property>
                    <item>
-                    <widget class="QCheckBox" name="hideOldPacketsCheckBox">
+                    <widget class="QCheckBox" name="hideOldPacketsCheckBox_can2">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -1758,7 +1758,7 @@
                   </layout>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="showOnlyIdsCheckBox">
+                  <widget class="QCheckBox" name="showOnlyIdsCheckBox_can2">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -1782,7 +1782,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="showOnlyIdsLineEdit">
+                  <widget class="QLineEdit" name="showOnlyIdsLineEdit_can2">
                    <property name="enabled">
                     <bool>false</bool>
                    </property>
@@ -1815,7 +1815,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="hideIdsCheckBox">
+                  <widget class="QCheckBox" name="hideIdsCheckBox_can2">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -1839,7 +1839,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="hideIdsLineEdit">
+                  <widget class="QLineEdit" name="hideIdsLineEdit_can2">
                    <property name="enabled">
                     <bool>false</bool>
                    </property>
@@ -1872,7 +1872,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="hideAllPacketsButton">
+                  <widget class="QPushButton" name="hideAllPacketsButton_can2">
                    <property name="enabled">
                     <bool>false</bool>
                    </property>
@@ -1939,7 +1939,7 @@
                     <enum>QLayout::SetMinimumSize</enum>
                    </property>
                    <item>
-                    <widget class="QPushButton" name="saveSelectedIdInDictButton">
+                    <widget class="QPushButton" name="saveSelectedIdInDictButton_can2">
                      <property name="enabled">
                       <bool>true</bool>
                      </property>
@@ -1972,7 +1972,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLineEdit" name="saveIdToDictLineEdit">
+                    <widget class="QLineEdit" name="saveIdToDictLineEdit_can2">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -2002,7 +2002,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLineEdit" name="saveLabelToDictLineEdit">
+                    <widget class="QLineEdit" name="saveLabelToDictLineEdit_can2">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -2041,7 +2041,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="addToDecodedPushButton">
+                  <widget class="QPushButton" name="addToDecodedPushButton_can2">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -2088,7 +2088,7 @@
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_4">
                  <item>
-                  <widget class="QPushButton" name="saveSessionToFileButton">
+                  <widget class="QPushButton" name="saveSessionToFileButton_can2">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -2125,7 +2125,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="playbackMainTableButton">
+                  <widget class="QPushButton" name="playbackMainTableButton_can2">
                    <property name="enabled">
                     <bool>true</bool>
                    </property>
@@ -2159,7 +2159,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="stopPlayBackButton">
+                  <widget class="QPushButton" name="stopPlayBackButton_can2">
                    <property name="minimumSize">
                     <size>
                      <width>0</width>
@@ -2177,7 +2177,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QProgressBar" name="playBackProgressBar">
+                  <widget class="QProgressBar" name="playBackProgressBar_can2">
                    <property name="minimumSize">
                     <size>
                      <width>0</width>
@@ -3931,9 +3931,9 @@
  <resources/>
  <connections>
   <connection>
-   <sender>showOnlyIdsCheckBox</sender>
+   <sender>showOnlyIdsCheckBox_can2</sender>
    <signal>clicked(bool)</signal>
-   <receiver>showOnlyIdsLineEdit</receiver>
+   <receiver>showOnlyIdsLineEdit_can2</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -3947,9 +3947,9 @@
    </hints>
   </connection>
   <connection>
-   <sender>hideIdsCheckBox</sender>
+   <sender>hideIdsCheckBox_can2</sender>
    <signal>clicked(bool)</signal>
-   <receiver>hideIdsLineEdit</receiver>
+   <receiver>hideIdsLineEdit_can2</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">
@@ -3979,7 +3979,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>hideOldPacketsCheckBox</sender>
+   <sender>hideOldPacketsCheckBox_can2</sender>
    <signal>clicked(bool)</signal>
    <receiver>hideOldPeriod</receiver>
    <slot>setEnabled(bool)</slot>
@@ -4171,9 +4171,9 @@
    </hints>
   </connection>
   <connection>
-   <sender>hideIdsCheckBox</sender>
+   <sender>hideIdsCheckBox_can2</sender>
    <signal>clicked(bool)</signal>
-   <receiver>hideAllPacketsButton</receiver>
+   <receiver>hideAllPacketsButton_can2</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel">

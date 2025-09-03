@@ -41,11 +41,11 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
         self.portDisconnectButton.clicked.connect(self.serialPortDisconnect)
         self.startSniffingButton.clicked.connect(self.startSniffing)
         self.stopSniffingButton.clicked.connect(self.stopSniffing)
-        self.saveSelectedIdInDictButton.clicked.connect(self.saveIdLabelToDictCallback)
-        self.saveSessionToFileButton.clicked.connect(self.saveSessionToFile)
+        self.saveSelectedIdInDictButton_can2.clicked.connect(self.saveIdLabelToDictCallback)
+        self.saveSessionToFileButton_can2.clicked.connect(self.saveSessionToFile)
         self.loadSessionFromFileButton.clicked.connect(self.loadSessionFromFile)
-        self.showOnlyIdsLineEdit.textChanged.connect(self.showOnlyIdsTextChanged)
-        self.hideIdsLineEdit.textChanged.connect(self.hideIdsTextChanged)
+        self.showOnlyIdsLineEdit_can2.textChanged.connect(self.can2showOnlyIdsTextChanged)
+        self.hideIdsLineEdit_can2.textChanged.connect(self.can2hideIdsTextChanged)
         self.clearLabelDictButton.clicked.connect(self.clearLabelDict)
         self.serialController = serial.Serial()
         self.can2MessageTableWidget.cellClicked.connect(self.cellWasClicked)
@@ -54,14 +54,14 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
         self.sendTxTableButton.clicked.connect(self.sendTxTableCallback)
         self.abortSessionLoadingButton.clicked.connect(self.abortSessionLoadingCallback)
         self.showSendingTableCheckBox.clicked.connect(self.showSendingTableButtonCallback)
-        self.addToDecodedPushButton.clicked.connect(self.addToDecodedCallback)
+        self.addToDecodedPushButton_can2.clicked.connect(self.addToDecodedCallback)
         self.deleteDecodedPacketLinePushButton.clicked.connect(self.deleteDecodedLineCallback)
         self.decodedMessagesTableWidget.itemChanged.connect(self.decodedTableItemChangedCallback)
-        self.clearTableButton.clicked.connect(self.clearTableCallback)
+        self.clearTableButton_can2.clicked.connect(self.clearTableCallback)
         self.sendSelectedDecodedPacketButton.clicked.connect(self.sendDecodedPacketCallback)
-        self.playbackMainTableButton.clicked.connect(self.playbackMainTableCallback)
-        self.stopPlayBackButton.clicked.connect(self.stopPlayBackCallback)
-        self.hideAllPacketsButton.clicked.connect(self.hideAllPackets)
+        self.playbackMainTableButton_can2.clicked.connect(self.playbackMainTableCallback)
+        self.stopPlayBackButton_can2.clicked.connect(self.stopPlayBackCallback)
+        self.hideAllPacketsButton_can2.clicked.connect(self.hideAllPackets)
         self.showControlsButton.hide()
         
         # 初始化串口读写和文件加载线程
@@ -75,8 +75,8 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
         self.hideOldPacketsThread.hideOldPacketsSignal.connect(self.hideOldPacketsCallback)
 
         # 控件初始状态设置
-        self.stopPlayBackButton.setVisible(False)
-        self.playBackProgressBar.setVisible(False)
+        self.stopPlayBackButton_can2.setVisible(False)
+        self.playBackProgressBar_can2.setVisible(False)
         self.sendingGroupBox.hide()
         self.hideOldPacketsThread.enable(5)
         self.hideOldPacketsThread.start()
@@ -90,8 +90,13 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
         self.playbackMainTableIndex = 0
         self.labelDictFile = None
         self.idDict = dict([])
-        self.showOnlyIdsSet = set([])
-        self.hideIdsSet = set([])
+        self.can1showOnlyIdsSet = set([])
+        self.can2showOnlyIdsSet = set([])
+        self.linshowOnlyIdsSet = set([])
+        self.can1hideIdsSet = set([])
+        self.can2hideIdsSet = set([])
+        self.linhideIdsSet = set([])
+
         self.idLabelDict = dict()
         self.isInited = False
         self.init()
@@ -155,9 +160,9 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
         except:
             pass
         self.serialWriterThread.clearQueues()
-        self.playbackMainTableButton.setVisible(True)
-        self.stopPlayBackButton.setVisible(False)
-        self.playBackProgressBar.setVisible(False)
+        self.playbackMainTableButton_can2.setVisible(True)
+        self.stopPlayBackButton_can2.setVisible(False)
+        self.playBackProgressBar_can2.setVisible(False)
 
     # 设置单选按钮状态
     def setRadioButton(self, radioButton:QRadioButton, mode):
@@ -196,16 +201,16 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
                 sec_to_ms = 1       # 时间戳已为毫秒
             dt = abs(int(dt * sec_to_ms))
             self.serialWriterThread.setNormalWriteDelay(dt)
-        self.playBackProgressBar.setValue(int((maxRows - row) / maxRows * 100))
+        self.playBackProgressBar_can2.setValue(int((maxRows - row) / maxRows * 100))
         self.playbackMainTableIndex -= 1
 
         self.serialWriterThread.write(txBuf)
 
     # 开始回放主表
     def playbackMainTableCallback(self):
-        self.playbackMainTableButton.setVisible(False)
-        self.stopPlayBackButton.setVisible(True)
-        self.playBackProgressBar.setVisible(True)
+        self.playbackMainTableButton_can2.setVisible(False)
+        self.stopPlayBackButton_can2.setVisible(True)
+        self.playBackProgressBar_can2.setVisible(True)
         self.playbackMainTableIndex = self.can2MessageTableWidget.rowCount() - 1
         self.serialWriterThread.setRepeatedWriteDelay(0)
         print('playing back...')
@@ -264,12 +269,12 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
         text = ""
         for id in self.idDict:
             text += id + " "
-        self.hideIdsLineEdit.setText(text)
+        self.hideIdsLineEdit_can2.setText(text)
         self.clearTableCallback()
 
     # 隐藏旧包回调
     def hideOldPacketsCallback(self):
-        if not self.hideOldPacketsCheckBox.isChecked():
+        if not self.hideOldPacketsCheckBox_can2.isChecked():
             return
         if not self.groupModeCheckBox.isChecked():
             return
@@ -320,15 +325,32 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
         self.txTable.insertRow(newRow)
 
     # 仅显示指定ID回调
-    def showOnlyIdsTextChanged(self):
-        self.showOnlyIdsSet.clear()
-        self.showOnlyIdsSet = set(self.showOnlyIdsLineEdit.text().split(" "))
+    def can2showOnlyIdsTextChanged(self):
+        self.can2showOnlyIdsSet.clear()
+        self.can2showOnlyIdsSet = set(self.showOnlyIdsLineEdit_can2.text().split(" "))
+
+    # 仅显示指定ID回调
+    def can1showOnlyIdsTextChanged(self):
+        self.can1showOnlyIdsSet.clear()
+        self.can1showOnlyIdsSet = set(self.showOnlyIdsLineEdit_can1.text().split(" "))
+
+    # 仅显示指定ID回调
+    def linshowOnlyIdsTextChanged(self):
+        self.linshowOnlyIdsSet.clear()
+        self.linshowOnlyIdsSet = set(self.showOnlyIdsLineEdit_lin.text().split(" "))
 
     # 隐藏指定ID回调
-    def hideIdsTextChanged(self):
-        self.hideIdsSet.clear()
-        self.hideIdsSet = set(self.hideIdsLineEdit.text().split(" "))
+    def can1hideIdsTextChanged(self):
+        self.can1hideIdsSet.clear()
+        self.can1hideIdsSet = set(self.hideIdsLineEdit_can1.text().split(" "))
 
+    def can2hideIdsTextChanged(self):
+        self.can2hideIdsSet.clear()
+        self.can2hideIdsSet = set(self.hideIdsLineEdit_can2.text().split(" "))
+
+    def linhideIdsTextChanged(self):
+        self.linhideIdsSet.clear()
+        self.linhideIdsSet = set(self.hideIdsLineEdit_lin.text().split(" "))
     # 初始化，加载解码表和ID标签字典
     def init(self):
         self.loadTableFromFile(self.decodedMessagesTableWidget, "save/decodedPackets.csv")
@@ -371,11 +393,11 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
 
     def can1TablePopulatorCallback(self, rowData):
         # 过滤显示和隐藏ID
-        if self.showOnlyIdsCheckBox.isChecked():
-            if str(rowData[1]) not in self.showOnlyIdsSet:
+        if self.showOnlyIdsCheckBox_can1.isChecked():
+            if str(rowData[1]) not in self.can1showOnlyIdsSet:
                 return
-        if self.hideIdsCheckBox.isChecked():
-            if str(rowData[1]) in self.hideIdsSet:
+        if self.hideIdsCheckBox_can1.isChecked():
+            if str(rowData[1]) in self.can1hideIdsSet:
                 return
 
         newId = str(rowData[1])
@@ -400,12 +422,12 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
                 newItem = QTableWidgetItem(data)
                 if item:
                     if item.text() != data:
-                        if self.highlightNewDataCheckBox.isChecked() and \
+                        if self.highlightNewDataCheckBox_can1.isChecked() and \
                                 self.groupModeCheckBox.isChecked() and \
                                 i > 4:
                             newItem.setBackground(QColor(104, 37, 98))
                 else:
-                    if self.highlightNewDataCheckBox.isChecked() and \
+                    if self.highlightNewDataCheckBox_can1.isChecked() and \
                             self.groupModeCheckBox.isChecked() and \
                             i > 4:
                         newItem.setBackground(QColor(104, 37, 98))
@@ -415,7 +437,7 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
 
         isFamiliar = False
 
-        if self.highlightNewIdCheckBox.isChecked():
+        if self.highlightNewIdCheckBox_can1.isChecked():
             if newId not in self.idDict.keys():
                 for j in range(3):
                     self.can1MessageTableWidget.item(row, j).setBackground(QColor(52, 44, 124))
@@ -436,14 +458,14 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
         self.receivedPackets = self.receivedPackets + 1
         self.packageCounterLabel.setText(str(self.receivedPackets))
 
-    # 主表填充回调
-    def mainTablePopulatorCallback(self, rowData):
+     # 主表填充回调
+    def can2TablePopulatorCallback(self, rowData):
         # 过滤显示和隐藏ID
-        if self.showOnlyIdsCheckBox.isChecked():
-            if str(rowData[1]) not in self.showOnlyIdsSet:
+        if self.showOnlyIdsCheckBox_can2.isChecked():
+            if str(rowData[1]) not in self.can2showOnlyIdsSet:
                 return
-        if self.hideIdsCheckBox.isChecked():
-            if str(rowData[1]) in self.hideIdsSet:
+        if self.hideIdsCheckBox_can2.isChecked():
+            if str(rowData[1]) in self.can2hideIdsSet:
                 return
 
         newId = str(rowData[1])
@@ -468,12 +490,12 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
                 newItem = QTableWidgetItem(data)
                 if item:
                     if item.text() != data:
-                        if self.highlightNewDataCheckBox.isChecked() and \
+                        if self.highlightNewDataCheckBox_can2.isChecked() and \
                                 self.groupModeCheckBox.isChecked() and \
                                 i > 4:
                             newItem.setBackground(QColor(104, 37, 98))
                 else:
-                    if self.highlightNewDataCheckBox.isChecked() and \
+                    if self.highlightNewDataCheckBox_can2.isChecked() and \
                             self.groupModeCheckBox.isChecked() and \
                             i > 4:
                         newItem.setBackground(QColor(104, 37, 98))
@@ -483,7 +505,7 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
 
         isFamiliar = False
 
-        if self.highlightNewIdCheckBox.isChecked():
+        if self.highlightNewIdCheckBox_can2.isChecked():
             if newId not in self.idDict.keys():
                 for j in range(3):
                     self.can2MessageTableWidget.item(row, j).setBackground(QColor(52, 44, 124))
@@ -503,6 +525,87 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
 
         self.receivedPackets = self.receivedPackets + 1
         self.packageCounterLabel.setText(str(self.receivedPackets))
+
+     # 主表填充回调
+    def linTablePopulatorCallback(self, rowData):
+        # 过滤显示和隐藏ID
+        if self.showOnlyIdsCheckBox_lin.isChecked():
+            if str(rowData[1]) not in self.linshowOnlyIdsSet:
+                return
+        if self.hideIdsCheckBox_lin.isChecked():
+            if str(rowData[1]) in self.linhideIdsSet:
+                return
+
+        newId = str(rowData[1])
+
+        row = 0
+        if self.groupModeCheckBox.isChecked():
+            if newId in self.idDict.keys():
+                row = self.idDict[newId]
+            else:
+                row = self.linMessageTableWidget.rowCount()
+                self.linMessageTableWidget.insertRow(row)
+        else:
+            self.linMessageTableWidget.insertRow(row)
+
+        if self.linMessageTableWidget.isRowHidden(row):
+            self.linMessageTableWidget.setRowHidden(row, False)
+
+        for i in range(self.linMessageTableWidget.columnCount()):
+            if i < len(rowData):
+                data = str(rowData[i])
+                item = self.linMessageTableWidget.item(row, i)
+                newItem = QTableWidgetItem(data)
+                if item:
+                    if item.text() != data:
+                        if self.highlightNewDataCheckBox_lin.isChecked() and \
+                                self.groupModeCheckBox.isChecked() and \
+                                i > 4:
+                            newItem.setBackground(QColor(104, 37, 98))
+                else:
+                    if self.highlightNewDataCheckBox_lin.isChecked() and \
+                            self.groupModeCheckBox.isChecked() and \
+                            i > 4:
+                        newItem.setBackground(QColor(104, 37, 98))
+            else:
+                newItem = QTableWidgetItem()
+            self.linMessageTableWidget.setItem(row, i, newItem)
+
+        isFamiliar = False
+
+        if self.highlightNewIdCheckBox_lin.isChecked():
+            if newId not in self.idDict.keys():
+                for j in range(3):
+                    self.linMessageTableWidget.item(row, j).setBackground(QColor(52, 44, 124))
+
+        self.idDict[newId] = row
+
+        if newId in self.idLabelDict.keys():
+            value = newId + " (" + self.idLabelDict[newId] + ")"
+            self.linMessageTableWidget.setItem(row, 1, QTableWidgetItem(value))
+            isFamiliar = True
+
+        for i in range(self.linMessageTableWidget.columnCount()):
+            if (isFamiliar or (newId.find("(") >= 0)) and i < 3:
+                self.linMessageTableWidget.item(row, i).setBackground(QColor(53, 81, 52))
+
+            self.linMessageTableWidget.item(row, i).setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
+
+        self.receivedPackets = self.receivedPackets + 1
+        self.packageCounterLabel.setText(str(self.receivedPackets))
+
+    # 主表填充回调
+    def mainTablePopulatorCallback(self, rowData):
+        if rowData[1][0] == 'A':
+            rowData[1] = rowData[1][1:]
+            self.can1TablePopulatorCallback(rowData)
+        elif rowData[1][0] == 'B':
+            rowData[1] = rowData[1][1:]
+            self.can2TablePopulatorCallback(rowData)
+        elif rowData[1][0] == 'L':
+            rowData[1] = rowData[1][1:]
+            self.linTablePopulatorCallback(rowData)
+        
 
     # 从文件加载表格
     def loadTableFromFile(self, table, path):
@@ -541,23 +644,23 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
 
     # 单元格点击回调
     def cellWasClicked(self):
-        self.saveIdToDictLineEdit.setText(self.can2MessageTableWidget.item(self.can2MessageTableWidget.currentRow(), 1).text())
+        self.saveIdToDictLineEdit_can2.setText(self.can2MessageTableWidget.item(self.can2MessageTableWidget.currentRow(), 1).text())
 
     # 保存ID标签到字典
     def saveIdLabelToDictCallback(self):
-        if (not self.saveIdToDictLineEdit.text()) or (not self.saveLabelToDictLineEdit.text()):
+        if (not self.saveIdToDictLineEdit_can2.text()) or (not self.saveLabelToDictLineEdit_can2.text()):
             return
         newRow = self.idLabelDictTable.rowCount()
         self.idLabelDictTable.insertRow(newRow)
         widgetItem = QTableWidgetItem()
         widgetItem.setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
-        widgetItem.setText(self.saveIdToDictLineEdit.text())
+        widgetItem.setText(self.saveIdToDictLineEdit_can2.text())
         self.idLabelDictTable.setItem(newRow, 0, QTableWidgetItem(widgetItem))
-        widgetItem.setText(self.saveLabelToDictLineEdit.text())
+        widgetItem.setText(self.saveLabelToDictLineEdit_can2.text())
         self.idLabelDictTable.setItem(newRow, 1, QTableWidgetItem(widgetItem))
-        self.idLabelDict[str(self.saveIdToDictLineEdit.text())] = str(self.saveLabelToDictLineEdit.text())
-        self.saveIdToDictLineEdit.setText('')
-        self.saveLabelToDictLineEdit.setText('')
+        self.idLabelDict[str(self.saveIdToDictLineEdit_can2.text())] = str(self.saveLabelToDictLineEdit_can2.text())
+        self.saveIdToDictLineEdit_can2.setText('')
+        self.saveLabelToDictLineEdit_can2.setText('')
         self.saveTableToFile(self.idLabelDictTable, "save/labelDict.csv")
 
     # 开始嗅探
