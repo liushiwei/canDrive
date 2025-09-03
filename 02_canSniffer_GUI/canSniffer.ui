@@ -571,7 +571,7 @@
          </font>
         </property>
         <property name="currentIndex">
-         <number>1</number>
+         <number>2</number>
         </property>
         <widget class="QWidget" name="tab_4">
          <attribute name="title">
@@ -579,7 +579,7 @@
          </attribute>
          <layout class="QHBoxLayout" name="horizontalLayout_22">
           <item>
-           <widget class="QTableWidget" name="mainMessageTableWidget_3">
+           <widget class="QTableWidget" name="can1MessageTableWidget">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
               <horstretch>0</horstretch>
@@ -749,14 +749,14 @@
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>0</y>
+               <y>-10</y>
                <width>305</width>
                <height>462</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_22">
               <item>
-               <widget class="QPushButton" name="clearTableButton_3">
+               <widget class="QPushButton" name="clearTableButton_can1">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -812,7 +812,7 @@
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_23">
                  <item>
-                  <widget class="QCheckBox" name="highlightNewIdCheckBox_3">
+                  <widget class="QCheckBox" name="highlightNewIdCheckBox_can1">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -836,7 +836,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="highlightNewDataCheckBox_3">
+                  <widget class="QCheckBox" name="highlightNewDataCheckBox_can1">
                    <property name="enabled">
                     <bool>true</bool>
                    </property>
@@ -871,7 +871,7 @@
                     <number>0</number>
                    </property>
                    <item>
-                    <widget class="QCheckBox" name="hideOldPacketsCheckBox_3">
+                    <widget class="QCheckBox" name="hideOldPacketsCheckBox_can1">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -934,7 +934,7 @@
                   </layout>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="showOnlyIdsCheckBox_3">
+                  <widget class="QCheckBox" name="showOnlyIdsCheckBox_can1">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -958,7 +958,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="showOnlyIdsLineEdit_3">
+                  <widget class="QLineEdit" name="showOnlyIdsLineEdit_can1">
                    <property name="enabled">
                     <bool>false</bool>
                    </property>
@@ -991,7 +991,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="hideIdsCheckBox_3">
+                  <widget class="QCheckBox" name="hideIdsCheckBox_can1">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -1015,7 +1015,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="hideIdsLineEdit_3">
+                  <widget class="QLineEdit" name="hideIdsLineEdit_can1">
                    <property name="enabled">
                     <bool>false</bool>
                    </property>
@@ -1048,7 +1048,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="hideAllPacketsButton_3">
+                  <widget class="QPushButton" name="hideAllPacketsButton_can1">
                    <property name="enabled">
                     <bool>false</bool>
                    </property>
@@ -1115,7 +1115,7 @@
                     <enum>QLayout::SetMinimumSize</enum>
                    </property>
                    <item>
-                    <widget class="QPushButton" name="saveSelectedIdInDictButton_3">
+                    <widget class="QPushButton" name="saveSelectedIdInDictButton_can1">
                      <property name="enabled">
                       <bool>true</bool>
                      </property>
@@ -1148,7 +1148,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLineEdit" name="saveIdToDictLineEdit_3">
+                    <widget class="QLineEdit" name="saveIdToDictLineEdit_can1">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -1178,7 +1178,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLineEdit" name="saveLabelToDictLineEdit_3">
+                    <widget class="QLineEdit" name="saveLabelToDictLineEdit_can1">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -1217,7 +1217,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="addToDecodedPushButton_3">
+                  <widget class="QPushButton" name="addToDecodedPushButton_can1">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -1264,7 +1264,7 @@
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_25">
                  <item>
-                  <widget class="QPushButton" name="saveSessionToFileButton_3">
+                  <widget class="QPushButton" name="saveSessionToFileButton_can1">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -1301,7 +1301,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="playbackMainTableButton_3">
+                  <widget class="QPushButton" name="playbackMainTableButton_can1">
                    <property name="enabled">
                     <bool>true</bool>
                    </property>
@@ -1335,7 +1335,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="stopPlayBackButton_3">
+                  <widget class="QPushButton" name="stopPlayBackButton_can1">
                    <property name="minimumSize">
                     <size>
                      <width>0</width>
@@ -1353,7 +1353,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QProgressBar" name="playBackProgressBar_3">
+                  <widget class="QProgressBar" name="playBackProgressBar_can1">
                    <property name="minimumSize">
                     <size>
                      <width>0</width>
@@ -1403,7 +1403,7 @@
          </attribute>
          <layout class="QHBoxLayout" name="horizontalLayout_4">
           <item>
-           <widget class="QTableWidget" name="mainMessageTableWidget">
+           <widget class="QTableWidget" name="can2MessageTableWidget">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
               <horstretch>0</horstretch>
@@ -2227,7 +2227,7 @@
          </attribute>
          <layout class="QHBoxLayout" name="horizontalLayout_25">
           <item>
-           <widget class="QTableWidget" name="mainMessageTableWidget_4">
+           <widget class="QTableWidget" name="linMessageTableWidget">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
               <horstretch>0</horstretch>
@@ -2397,14 +2397,14 @@
              <property name="geometry">
               <rect>
                <x>0</x>
-               <y>0</y>
+               <y>-10</y>
                <width>305</width>
                <height>462</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_26">
               <item>
-               <widget class="QPushButton" name="clearTableButton_4">
+               <widget class="QPushButton" name="clearTableButton_lin">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                   <horstretch>0</horstretch>
@@ -2460,7 +2460,7 @@
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_27">
                  <item>
-                  <widget class="QCheckBox" name="highlightNewIdCheckBox_4">
+                  <widget class="QCheckBox" name="highlightNewIdCheckBox_lin">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -2484,7 +2484,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="highlightNewDataCheckBox_4">
+                  <widget class="QCheckBox" name="highlightNewDataCheckBox_lin">
                    <property name="enabled">
                     <bool>true</bool>
                    </property>
@@ -2519,7 +2519,7 @@
                     <number>0</number>
                    </property>
                    <item>
-                    <widget class="QCheckBox" name="hideOldPacketsCheckBox_4">
+                    <widget class="QCheckBox" name="hideOldPacketsCheckBox_lin">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                        <horstretch>0</horstretch>
@@ -2582,7 +2582,7 @@
                   </layout>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="showOnlyIdsCheckBox_4">
+                  <widget class="QCheckBox" name="showOnlyIdsCheckBox_lin">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -2606,7 +2606,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="showOnlyIdsLineEdit_4">
+                  <widget class="QLineEdit" name="showOnlyIdsLineEdit_lin">
                    <property name="enabled">
                     <bool>false</bool>
                    </property>
@@ -2639,7 +2639,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QCheckBox" name="hideIdsCheckBox_4">
+                  <widget class="QCheckBox" name="hideIdsCheckBox_lin">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -2663,7 +2663,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLineEdit" name="hideIdsLineEdit_4">
+                  <widget class="QLineEdit" name="hideIdsLineEdit_lin">
                    <property name="enabled">
                     <bool>false</bool>
                    </property>
@@ -2696,7 +2696,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="hideAllPacketsButton_4">
+                  <widget class="QPushButton" name="hideAllPacketsButton_lin">
                    <property name="enabled">
                     <bool>false</bool>
                    </property>
@@ -2763,7 +2763,7 @@
                     <enum>QLayout::SetMinimumSize</enum>
                    </property>
                    <item>
-                    <widget class="QPushButton" name="saveSelectedIdInDictButton_4">
+                    <widget class="QPushButton" name="saveSelectedIdInDictButton_lin">
                      <property name="enabled">
                       <bool>true</bool>
                      </property>
@@ -2796,7 +2796,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLineEdit" name="saveIdToDictLineEdit_4">
+                    <widget class="QLineEdit" name="saveIdToDictLineEdit_lin">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -2826,7 +2826,7 @@
                     </widget>
                    </item>
                    <item>
-                    <widget class="QLineEdit" name="saveLabelToDictLineEdit_4">
+                    <widget class="QLineEdit" name="saveLabelToDictLineEdit_lin">
                      <property name="sizePolicy">
                       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                        <horstretch>0</horstretch>
@@ -2865,7 +2865,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="addToDecodedPushButton_4">
+                  <widget class="QPushButton" name="addToDecodedPushButton_lin">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -2912,7 +2912,7 @@
                 </property>
                 <layout class="QVBoxLayout" name="verticalLayout_29">
                  <item>
-                  <widget class="QPushButton" name="saveSessionToFileButton_4">
+                  <widget class="QPushButton" name="saveSessionToFileButton_lin">
                    <property name="sizePolicy">
                     <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                      <horstretch>0</horstretch>
@@ -2949,7 +2949,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="playbackMainTableButton_4">
+                  <widget class="QPushButton" name="playbackMainTableButton_lin">
                    <property name="enabled">
                     <bool>true</bool>
                    </property>
@@ -2983,7 +2983,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QPushButton" name="stopPlayBackButton_4">
+                  <widget class="QPushButton" name="stopPlayBackButton_lin">
                    <property name="minimumSize">
                     <size>
                      <width>0</width>
@@ -3001,7 +3001,7 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QProgressBar" name="playBackProgressBar_4">
+                  <widget class="QProgressBar" name="playBackProgressBar_lin">
                    <property name="minimumSize">
                     <size>
                      <width>0</width>

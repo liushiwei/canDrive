@@ -5,7 +5,7 @@ import serial
 import canSniffer_ui
 from PyQt5.QtWidgets import QMainWindow, QApplication, QTableWidgetItem, QHeaderView, QFileDialog, QRadioButton
 from PyQt5.QtWidgets import QVBoxLayout, QSizeGrip
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt,QEvent 
 from PyQt5.QtGui import QColor
 import serial.tools.list_ports
 
@@ -30,6 +30,11 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
     def __init__(self):
         super(canSnifferGUI, self).__init__()
         self.setupUi(self)
+        
+        self.setWindowFlags(Qt.Window | Qt.WindowMinimizeButtonHint | Qt.WindowMaximizeButtonHint)
+        self.setWindowTitle("CAN Sniffer")
+        self.setGeometry(200, 200, 600, 400)
+
         # 连接各个按钮和控件的信号与槽
         self.portScanButton.clicked.connect(self.scanPorts)
         self.portConnectButton.clicked.connect(self.serialPortConnect)
@@ -58,13 +63,13 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
         self.stopPlayBackButton.clicked.connect(self.stopPlayBackCallback)
         self.hideAllPacketsButton.clicked.connect(self.hideAllPackets)
         self.showControlsButton.hide()
-
+        
         # 初始化串口读写和文件加载线程
         self.serialWriterThread = SerialWriter.SerialWriterThread(self.serialController)
         self.serialReaderThread = SerialReader.SerialReaderThread(self.serialController)
         self.serialReaderThread.receivedPacketSignal.connect(self.serialPacketReceiverCallback)
         self.fileLoaderThread = FileLoader.FileLoaderThread()
-        self.fileLoaderThread.newRowSignal.connect(self.mainTablePopulatorCallback)
+        self.fileLoaderThread.newRowSignal.connect(self.fileLoaderCallback)
         self.fileLoaderThread.loadingFinishedSignal.connect(self.fileLoadingFinishedCallback)
         self.hideOldPacketsThread = HideOldPackets.HideOldPacketsThread()
         self.hideOldPacketsThread.hideOldPacketsSignal.connect(self.hideOldPacketsCallback)
@@ -75,7 +80,7 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
         self.sendingGroupBox.hide()
         self.hideOldPacketsThread.enable(5)
         self.hideOldPacketsThread.start()
-
+        
         # 导出解码列表时间戳格式设置
         self.exportDecodedListInMillisecTimestamp = False
 
@@ -90,21 +95,59 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
         self.idLabelDict = dict()
         self.isInited = False
         self.init()
-
+        
         # 创建保存文件夹
         if not os.path.exists("save"):
             os.makedirs("save")
 
         # 设置表格列宽
+        #can2
         for i in range(5, self.can2MessageTableWidget.columnCount()):
             self.can2MessageTableWidget.setColumnWidth(i, 32)
         for i in range(5, self.can2MessageTableWidget.columnCount()):
             self.decodedMessagesTableWidget.setColumnWidth(i, 32)
+        #can1
+        for i in range(5, self.can1MessageTableWidget.columnCount()):
+            self.can1MessageTableWidget.setColumnWidth(i, 32)
+        for i in range(5, self.can1MessageTableWidget.columnCount()):
+            self.decodedMessagesTableWidget.setColumnWidth(i, 32)
+
+        #lin
+        for i in range(5, self.linMessageTableWidget.columnCount()):
+            self.linMessageTableWidget.setColumnWidth(i, 32)
+        for i in range(5, self.linMessageTableWidget.columnCount()):
+            self.decodedMessagesTableWidget.setColumnWidth(i, 32)
+
         self.decodedMessagesTableWidget.setColumnWidth(1, 150)
         self.decodedMessagesTableWidget.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
         self.txTable.horizontalHeader().setSectionResizeMode(3, QHeaderView.Stretch)
-        self.showFullScreen()
-
+        self.showNormal()
+        # 然后再进入全屏
+        #self.showFullScreen()
+        self.showMaximized()
+    '''   
+    def event(self, event):
+        print('-----event = ',event.type())
+        # 捕获窗口被重新激活
+        if event.type() == 24:
+            print('-----ActivationChange = ',event.type())
+            #if self.isMinimized():
+            print("任务栏点击激活，恢复窗口")
+            self.showNormal()
+            self.raise_()
+            self.activateWindow()
+        return super().event(event,)
+    def changeEvent(self, event):
+        print('-----changeEvent = ',event.type())
+        if event.type() == QEvent.WindowStateChange:
+            if self.isMinimized():
+                # 最小化时可以做一些处理
+                self.update()  # 强制刷新缩略图
+            elif self.isActiveWindow():
+                # 恢复时强制显示
+                self.showNormal()
+        super().changeEvent(event)
+    '''
     # 停止回放
     def stopPlayBackCallback(self):
         try:
@@ -323,6 +366,76 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
                             rowData.append('')
                     writer.writerow(rowData)
 
+    def fileLoaderCallback(self, rowData):
+        self.mainTablePopulatorCallback(rowData)
+
+    def can1TablePopulatorCallback(self, rowData):
+        # 过滤显示和隐藏ID
+        if self.showOnlyIdsCheckBox.isChecked():
+            if str(rowData[1]) not in self.showOnlyIdsSet:
+                return
+        if self.hideIdsCheckBox.isChecked():
+            if str(rowData[1]) in self.hideIdsSet:
+                return
+
+        newId = str(rowData[1])
+
+        row = 0
+        if self.groupModeCheckBox.isChecked():
+            if newId in self.idDict.keys():
+                row = self.idDict[newId]
+            else:
+                row = self.can1MessageTableWidget.rowCount()
+                self.can1MessageTableWidget.insertRow(row)
+        else:
+            self.can1MessageTableWidget.insertRow(row)
+
+        if self.can1MessageTableWidget.isRowHidden(row):
+            self.can1MessageTableWidget.setRowHidden(row, False)
+
+        for i in range(self.can1MessageTableWidget.columnCount()):
+            if i < len(rowData):
+                data = str(rowData[i])
+                item = self.can1MessageTableWidget.item(row, i)
+                newItem = QTableWidgetItem(data)
+                if item:
+                    if item.text() != data:
+                        if self.highlightNewDataCheckBox.isChecked() and \
+                                self.groupModeCheckBox.isChecked() and \
+                                i > 4:
+                            newItem.setBackground(QColor(104, 37, 98))
+                else:
+                    if self.highlightNewDataCheckBox.isChecked() and \
+                            self.groupModeCheckBox.isChecked() and \
+                            i > 4:
+                        newItem.setBackground(QColor(104, 37, 98))
+            else:
+                newItem = QTableWidgetItem()
+            self.can1MessageTableWidget.setItem(row, i, newItem)
+
+        isFamiliar = False
+
+        if self.highlightNewIdCheckBox.isChecked():
+            if newId not in self.idDict.keys():
+                for j in range(3):
+                    self.can1MessageTableWidget.item(row, j).setBackground(QColor(52, 44, 124))
+
+        self.idDict[newId] = row
+
+        if newId in self.idLabelDict.keys():
+            value = newId + " (" + self.idLabelDict[newId] + ")"
+            self.can1MessageTableWidget.setItem(row, 1, QTableWidgetItem(value))
+            isFamiliar = True
+
+        for i in range(self.can1MessageTableWidget.columnCount()):
+            if (isFamiliar or (newId.find("(") >= 0)) and i < 3:
+                self.can1MessageTableWidget.item(row, i).setBackground(QColor(53, 81, 52))
+
+            self.can1MessageTableWidget.item(row, i).setTextAlignment(Qt.AlignVCenter | Qt.AlignHCenter)
+
+        self.receivedPackets = self.receivedPackets + 1
+        self.packageCounterLabel.setText(str(self.receivedPackets))
+
     # 主表填充回调
     def mainTablePopulatorCallback(self, rowData):
         # 过滤显示和隐藏ID
@@ -451,7 +564,9 @@ class canSnifferGUI(QMainWindow, canSniffer_ui.Ui_MainWindow):
     def startSniffing(self):
         if self.autoclearCheckBox.isChecked():
             self.idDict.clear()
+            self.can1MessageTableWidget.setRowCount(0)
             self.can2MessageTableWidget.setRowCount(0)
+            self.linMessageTableWidget.setRowCount(0)
         self.startSniffingButton.setEnabled(False)
         self.stopSniffingButton.setEnabled(True)
         self.sendTxTableButton.setEnabled(True)
